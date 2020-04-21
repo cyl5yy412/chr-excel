@@ -129,8 +129,17 @@ public class ExcelUtil {
                             case "class java.util.Date":
                                 switch (cell.getCellType()) {
                                     case Cell.CELL_TYPE_STRING: // 字符串
-                                        method.invoke(obj, sdf.parse(cell.getStringCellValue()));
+                                        Date yyyyMMdd = sdf.parse(cell.getStringCellValue());
+                                        method.invoke(obj, yyyyMMdd);
                                         break;
+                                    case Cell.CELL_TYPE_NUMERIC:// 数字
+                                        short dataFormat = cell.getCellStyle().getDataFormat();
+                                        if (14 == dataFormat || 31 == dataFormat) {// yyyy-MM-dd 14 或 yyyy-MM-dd HH:mm:ss 31
+                                            double dateVal = cell.getNumericCellValue();//dateDouble
+                                            Date javaDate = DateUtil.getJavaDate(dateVal);//javaDate
+                                            method.invoke(obj, javaDate);
+                                            break;
+                                        }
                                 }
                                 break;
                             default:

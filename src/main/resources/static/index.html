@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="lib/jquery-1.7.2.js"></script>
+    <script src="lib/jquery.form.js"></script>
+
+</head>
+<body>
+<div>
+    <button id="template">模板</button>
+    <br>
+    <button id="export">导出</button>
+    <br>
+    <td class="form-table-td-left">
+        <label for="file">文件选择:</label>
+    </td>
+    <form id="contentAddForm" method="post" enctype="multipart/form-data">
+        <td class="form-table-td-right">
+            <input type="file" name="uploadFile"/>
+        </td>
+        <button  id="btn-submit">上传</button>
+    </form>
+</div>
+<script>
+    $("#template").on("click", function () {
+        window.location.href = 'excel/template';
+    });
+    $("#export").on("click", function () {
+        window.location.href = 'excel/export';
+    });
+    function submitForm() {
+        //使用jquery的ajax upload插件可以上传文件
+        $('#contentAddForm').ajaxSubmit({
+            type: 'post',
+            url: 'excel/import',
+            success: function (resp) {
+                console.log(resp)
+//            if (data.status == 200) {
+//                $("#infoMsg").html('<span style="color:green;">信息提示:导入完成</span>');
+//                $("#businessinfoTable").datagrid("reload");
+//            } else {
+//                $.messager.alert('提示', data.msg, 'info');
+//            }
+            },
+        });
+    }
+    $(function () {
+        $("#btn-submit").bind('click', submitForm);
+    })
+
+</script>
+</body>
+</html>
