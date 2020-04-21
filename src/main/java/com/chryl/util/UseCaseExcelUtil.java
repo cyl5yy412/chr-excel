@@ -40,250 +40,247 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 
+@SuppressWarnings({"rawtypes", "deprecation"})
+public class UseCaseExcelUtil {
+    final static String notnullerror = "请填入第{0}行的{1},{2}不能为空";
+    final static String errormsg = "第{0}行的{1}数据导入错误";
 
-@SuppressWarnings({ "rawtypes", "deprecation" })
-public class UseCaseExcelUtil
-{
-	final static String notnullerror = "请填入第{0}行的{1},{2}不能为空";
-	final static String errormsg = "第{0}行的{1}数据导入错误";
-	
-	public static List<Map<String, Object>> createExcelRecord(List list) {
+    public static List<Map<String, Object>> createExcelRecord(List list) {
         List<Map<String, Object>> listmap = new ArrayList<Map<String, Object>>();
         Object t = null;
         for (int j = 0; j < list.size(); j++) {
-        	t = list.get(j);
-        	if(t instanceof Map) {
-        		listmap.add((Map<String, Object>)t);
-        	}else {
-        		Map<String, Object> mapValue = BeanUtil.transBean2Map(t);
+            t = list.get(j);
+            if (t instanceof Map) {
+                listmap.add((Map<String, Object>) t);
+            } else {
+                Map<String, Object> mapValue = BeanUtil.transBean2Map(t);
                 listmap.add(mapValue);
-        	}
-           
+            }
+
         }
         return listmap;
     }
-	 public static Workbook createWorkBook2007(List<Map<String, Object>> list,String[] keys,String[] columnNames) {
-	    	XSSFWorkbook workbook = new XSSFWorkbook();//创建一个Excel文件
-	    	XSSFSheet sheet = workbook.createSheet();// 生成一个表格
-           
-	    	// 设置表格默认列宽度为15个字节
-			//sheet.setDefaultColumnWidth((short) 15);
-	    	
-			// 生成一个样式
-	    	XSSFCellStyle style = workbook.createCellStyle();
-			// 设置这些样式
-			style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-			style.setFillForegroundColor(HSSFColor.LIGHT_YELLOW.index);
-			style.setBorderBottom(BorderStyle.THIN);
-			style.setBorderLeft(BorderStyle.THIN);
-			style.setBorderRight(BorderStyle.THIN);
-			style.setBorderTop(BorderStyle.THIN);
-			style.setAlignment(HorizontalAlignment.CENTER);
-			// 生成一个字体
-			XSSFFont font = workbook.createFont();
-			font.setBold(true);
-			// 把字体应用到当前的样式
-			style.setFont(font);
-			
-			XSSFCellStyle contextStyle = workbook.createCellStyle();
-			contextStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-			contextStyle.setFillForegroundColor(HSSFColor.WHITE.index);
-			contextStyle.setBorderBottom(BorderStyle.THIN);
-			contextStyle.setBorderLeft(BorderStyle.THIN);
-			contextStyle.setBorderRight(BorderStyle.THIN);
-			contextStyle.setBorderTop(BorderStyle.THIN);
-			contextStyle.setAlignment(HorizontalAlignment.CENTER);
-			contextStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-			int pixel = 536;
-			// 产生表格标题行
-			int rowIndex = 0;
-			XSSFRow row = sheet.createRow(rowIndex);
-			for (short columIndex = 0; columIndex < columnNames.length; columIndex++)
-			{
-				
-				XSSFCell cell = row.createCell(columIndex);
-				cell.setCellStyle(style);
-				String title = columnNames[columIndex];
-				cell.setCellValue(columnNames[columIndex]);
-				
-				//根据标题设置列宽
-				int width = title.length() * pixel;
-				sheet.setColumnWidth(columIndex, width < 5000 ? 5000 : width );
-			}
-	    	// 遍历集合数据，产生数据行 第一行存放
-			if(list != null) {
-				for(int i = 0 ; i < list.size(); i++ ) {
-		    		rowIndex++;
-		    	    XSSFRow contextRow = sheet.createRow(rowIndex);
-		    		
-		    		//遍历列 
-		    		if(keys != null) {
-		    			for(int j=0;j<keys.length;j++){
-			    			
-			    			Object val = list.get(i).get(keys[j]);
-			    			XSSFCell contentCell = contextRow.createCell(j);
-			    			
-			    			Boolean isNum = false;//val 是否为数值型
-			    			Boolean isInteger = false; //val 是否为整数
-			    			Boolean isPercent = false; //val 是否为百分数
-			    			
-			    			if(val != null) {
-			    				//判断data是否为数值型
-			                    isNum = val.toString().matches("^(-?\\d+)(\\.\\d+)?$");
-			                    //判断data是否为整数（小数部分是否为0）
-			                    isInteger=val.toString().matches("^[-\\+]?[\\d]*$");
-			                    //判断data是否为百分数（是否包含“%”）
-			                    isPercent=val.toString().contains("%");
-			    			} else {
-			    				val = " ";
-			    			}
-			    			 XSSFDataFormat df = workbook.createDataFormat();
-			                // 设置单元格内容为字符型
-			                contentCell.setCellValue(val.toString());
-			                contentCell.setCellStyle(contextStyle);
-			                
-			                // 根据内容设置列宽度
-			                int columWidth = val.toString().length() * pixel;
-			                int w = sheet.getColumnWidth(j);
-			                if(columWidth > w && columWidth < (20 * pixel)) {
-			                	sheet.setColumnWidth(j , columWidth);
-			                }
-			    		}
-		    		}
-		    	}
-			}
-	    	return workbook;
-	    }
-	
-	
-    public static Workbook createWorkBook(List<Map<String, Object>> list,String[] keys,String[] columnNames) {
-    	HSSFWorkbook workbook = new HSSFWorkbook();//创建一个Excel文件
-    	HSSFSheet sheet = workbook.createSheet();// 生成一个表格
 
-    	// 设置表格默认列宽度为15个字节
-		//sheet.setDefaultColumnWidth((short) 15);
-    	
-		// 生成一个样式
-		HSSFCellStyle style = workbook.createCellStyle();
-		// 设置这些样式
-		//style.setFillForegroundColor(HSSFColor.SKY_BLUE.index);
-		style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-		style.setFillForegroundColor(HSSFColor.LIGHT_YELLOW.index);
-		style.setBorderBottom(BorderStyle.THIN);
-		style.setBorderLeft(BorderStyle.THIN);
-		style.setBorderRight(BorderStyle.THIN);
-		style.setBorderTop(BorderStyle.THIN);
-		style.setAlignment(HorizontalAlignment.CENTER);
-		// 生成一个字体
-		HSSFFont font = workbook.createFont();
-		//font.setColor(HSSFColor.VIOLET.index);
-		//font.setFontHeightInPoints((short) 12);
-		font.setBold(true);
-		// 把字体应用到当前的样式
-		style.setFont(font);
-		
-		HSSFCellStyle contextStyle = workbook.createCellStyle();
-//		contextStyle.setFillForegroundColor(HSSFColor.LIGHT_YELLOW.index);
-		
-		contextStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-		contextStyle.setFillForegroundColor(HSSFColor.WHITE.index);
-		contextStyle.setBorderBottom(BorderStyle.THIN);
-		contextStyle.setBorderLeft(BorderStyle.THIN);
-		contextStyle.setBorderRight(BorderStyle.THIN);
-		contextStyle.setBorderTop(BorderStyle.THIN);
-		contextStyle.setAlignment(HorizontalAlignment.CENTER);
-		contextStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-		
-		int pixel = 536;
-		// 产生表格标题行
-		int rowIndex = 0;
-		HSSFRow row = sheet.createRow(rowIndex);
-		for (short columIndex = 0; columIndex < columnNames.length; columIndex++)
-		{
-			
-			HSSFCell cell = row.createCell(columIndex);
-			cell.setCellStyle(style);
-			String title = columnNames[columIndex];
-			cell.setCellValue(columnNames[columIndex]);
-			
-			//根据标题设置列宽
-			int width = title.length() * pixel;
-			sheet.setColumnWidth(columIndex, width < 5000 ? 5000 : width );
-		}
-    	// 遍历集合数据，产生数据行 第一行存放
-		if(list != null) {
-			for(int i = 0 ; i < list.size(); i++ ) {
-	    		rowIndex++;
-	    		HSSFRow contextRow = sheet.createRow(rowIndex);
-	    		
-	    		//遍历列 
-	    		if(keys != null) {
-	    			for(int j=0;j<keys.length;j++){
-		    			
-		    			Object val = list.get(i).get(keys[j]);
-		    			HSSFCell contentCell = contextRow.createCell(j);
-		    			
-		    			Boolean isNum = false;//val 是否为数值型
-		    			Boolean isInteger = false; //val 是否为整数
-		    			Boolean isPercent = false; //val 是否为百分数
-		    			
-		    			if(val != null) {
-		    				//判断data是否为数值型
-		                    isNum = val.toString().matches("^(-?\\d+)(\\.\\d+)?$");
-		                    //判断data是否为整数（小数部分是否为0）
-		                    isInteger=val.toString().matches("^[-\\+]?[\\d]*$");
-		                    //判断data是否为百分数（是否包含“%”）
-		                    isPercent=val.toString().contains("%");
-		    			} else {
-		    				val = " ";
-		    			}
-		    			
-		    			// 如果单元格内容是数值类型，涉及到金钱（金额、本、利），则设置cell的类型为数值型，设置data的类型为数值类型
-		                if (isNum && !isPercent) {
-		                    HSSFDataFormat df = workbook.createDataFormat(); // 此处设置数据格式
-		                    if (isInteger) {
-		                    	contextStyle.setDataFormat(df.getBuiltinFormat("#,#0"));//数据格式只显示整数
-		                    	// 设置单元格格式
-			                    contentCell.setCellStyle(contextStyle);
-			                    // 设置单元格内容为double类型
-			                    if(val.toString().length()<9){
-			                    contentCell.setCellValue(Integer.parseInt(val.toString()));
-			                    }else{
-			                    	contentCell.setCellStyle(contextStyle);
-				                    // 设置单元格内容为字符型
-					                contentCell.setCellValue(val.toString());
-			                    }
-		                    } else {
-		                    	contextStyle.setDataFormat(df.getBuiltinFormat("#,##0.00"));//保留两位小数点
-		                    	// 设置单元格格式
-			                    contentCell.setCellStyle(contextStyle);
-			                    // 设置单元格内容为double类型
-			                    contentCell.setCellValue(Double.parseDouble(val.toString()));
-		                    }                   
-		                } else {
-		                    contentCell.setCellStyle(contextStyle);
-		                    // 设置单元格内容为字符型
-			                contentCell.setCellValue(val.toString());
-		                }
-		                // 设置单元格内容为字符型
-		                // contentCell.setCellValue(val.toString());
-		                
-		                // 根据内容设置列宽度
-		                int columWidth = val.toString().length() * pixel;
-		                int w = sheet.getColumnWidth(j);
-		                if(columWidth > w && columWidth < (20 * pixel)) {
-		                	sheet.setColumnWidth(j , columWidth);
-		                }
-		    		}
-	    		}
-	    	}
-		}
-    	return workbook;
+    public static Workbook createWorkBook2007(List<Map<String, Object>> list, String[] keys, String[] columnNames) {
+        XSSFWorkbook workbook = new XSSFWorkbook();//创建一个Excel文件
+        XSSFSheet sheet = workbook.createSheet();// 生成一个表格
+
+        // 设置表格默认列宽度为15个字节
+        //sheet.setDefaultColumnWidth((short) 15);
+
+        // 生成一个样式
+        XSSFCellStyle style = workbook.createCellStyle();
+        // 设置这些样式
+        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        style.setFillForegroundColor(HSSFColor.LIGHT_YELLOW.index);
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setBorderRight(BorderStyle.THIN);
+        style.setBorderTop(BorderStyle.THIN);
+        style.setAlignment(HorizontalAlignment.CENTER);
+        // 生成一个字体
+        XSSFFont font = workbook.createFont();
+        font.setBold(true);
+        // 把字体应用到当前的样式
+        style.setFont(font);
+
+        XSSFCellStyle contextStyle = workbook.createCellStyle();
+        contextStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        contextStyle.setFillForegroundColor(HSSFColor.WHITE.index);
+        contextStyle.setBorderBottom(BorderStyle.THIN);
+        contextStyle.setBorderLeft(BorderStyle.THIN);
+        contextStyle.setBorderRight(BorderStyle.THIN);
+        contextStyle.setBorderTop(BorderStyle.THIN);
+        contextStyle.setAlignment(HorizontalAlignment.CENTER);
+        contextStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        int pixel = 536;
+        // 产生表格标题行
+        int rowIndex = 0;
+        XSSFRow row = sheet.createRow(rowIndex);
+        for (short columIndex = 0; columIndex < columnNames.length; columIndex++) {
+
+            XSSFCell cell = row.createCell(columIndex);
+            cell.setCellStyle(style);
+            String title = columnNames[columIndex];
+            cell.setCellValue(columnNames[columIndex]);
+
+            //根据标题设置列宽
+            int width = title.length() * pixel;
+            sheet.setColumnWidth(columIndex, width < 5000 ? 5000 : width);
+        }
+        // 遍历集合数据，产生数据行 第一行存放
+        if (list != null) {
+            for (int i = 0; i < list.size(); i++) {
+                rowIndex++;
+                XSSFRow contextRow = sheet.createRow(rowIndex);
+
+                //遍历列
+                if (keys != null) {
+                    for (int j = 0; j < keys.length; j++) {
+
+                        Object val = list.get(i).get(keys[j]);
+                        XSSFCell contentCell = contextRow.createCell(j);
+
+                        Boolean isNum = false;//val 是否为数值型
+                        Boolean isInteger = false; //val 是否为整数
+                        Boolean isPercent = false; //val 是否为百分数
+
+                        if (val != null) {
+                            //判断data是否为数值型
+                            isNum = val.toString().matches("^(-?\\d+)(\\.\\d+)?$");
+                            //判断data是否为整数（小数部分是否为0）
+                            isInteger = val.toString().matches("^[-\\+]?[\\d]*$");
+                            //判断data是否为百分数（是否包含“%”）
+                            isPercent = val.toString().contains("%");
+                        } else {
+                            val = " ";
+                        }
+                        XSSFDataFormat df = workbook.createDataFormat();
+                        // 设置单元格内容为字符型
+                        contentCell.setCellValue(val.toString());
+                        contentCell.setCellStyle(contextStyle);
+
+                        // 根据内容设置列宽度
+                        int columWidth = val.toString().length() * pixel;
+                        int w = sheet.getColumnWidth(j);
+                        if (columWidth > w && columWidth < (20 * pixel)) {
+                            sheet.setColumnWidth(j, columWidth);
+                        }
+                    }
+                }
+            }
+        }
+        return workbook;
     }
 
-/**
+
+    public static Workbook createWorkBook(List<Map<String, Object>> list, String[] keys, String[] columnNames) {
+        HSSFWorkbook workbook = new HSSFWorkbook();//创建一个Excel文件
+        HSSFSheet sheet = workbook.createSheet();// 生成一个表格
+
+        // 设置表格默认列宽度为15个字节
+        //sheet.setDefaultColumnWidth((short) 15);
+
+        // 生成一个样式
+        HSSFCellStyle style = workbook.createCellStyle();
+        // 设置这些样式
+        //style.setFillForegroundColor(HSSFColor.SKY_BLUE.index);
+        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        style.setFillForegroundColor(HSSFColor.LIGHT_YELLOW.index);
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setBorderRight(BorderStyle.THIN);
+        style.setBorderTop(BorderStyle.THIN);
+        style.setAlignment(HorizontalAlignment.CENTER);
+        // 生成一个字体
+        HSSFFont font = workbook.createFont();
+        //font.setColor(HSSFColor.VIOLET.index);
+        //font.setFontHeightInPoints((short) 12);
+        font.setBold(true);
+        // 把字体应用到当前的样式
+        style.setFont(font);
+
+        HSSFCellStyle contextStyle = workbook.createCellStyle();
+//		contextStyle.setFillForegroundColor(HSSFColor.LIGHT_YELLOW.index);
+
+        contextStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        contextStyle.setFillForegroundColor(HSSFColor.WHITE.index);
+        contextStyle.setBorderBottom(BorderStyle.THIN);
+        contextStyle.setBorderLeft(BorderStyle.THIN);
+        contextStyle.setBorderRight(BorderStyle.THIN);
+        contextStyle.setBorderTop(BorderStyle.THIN);
+        contextStyle.setAlignment(HorizontalAlignment.CENTER);
+        contextStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+        int pixel = 536;
+        // 产生表格标题行
+        int rowIndex = 0;
+        HSSFRow row = sheet.createRow(rowIndex);
+        for (short columIndex = 0; columIndex < columnNames.length; columIndex++) {
+
+            HSSFCell cell = row.createCell(columIndex);
+            cell.setCellStyle(style);
+            String title = columnNames[columIndex];
+            cell.setCellValue(columnNames[columIndex]);
+
+            //根据标题设置列宽
+            int width = title.length() * pixel;
+            sheet.setColumnWidth(columIndex, width < 5000 ? 5000 : width);
+        }
+        // 遍历集合数据，产生数据行 第一行存放
+        if (list != null) {
+            for (int i = 0; i < list.size(); i++) {
+                rowIndex++;
+                HSSFRow contextRow = sheet.createRow(rowIndex);
+
+                //遍历列
+                if (keys != null) {
+                    for (int j = 0; j < keys.length; j++) {
+
+                        Object val = list.get(i).get(keys[j]);
+                        HSSFCell contentCell = contextRow.createCell(j);
+
+                        Boolean isNum = false;//val 是否为数值型
+                        Boolean isInteger = false; //val 是否为整数
+                        Boolean isPercent = false; //val 是否为百分数
+
+                        if (val != null) {
+                            //判断data是否为数值型
+                            isNum = val.toString().matches("^(-?\\d+)(\\.\\d+)?$");
+                            //判断data是否为整数（小数部分是否为0）
+                            isInteger = val.toString().matches("^[-\\+]?[\\d]*$");
+                            //判断data是否为百分数（是否包含“%”）
+                            isPercent = val.toString().contains("%");
+                        } else {
+                            val = " ";
+                        }
+
+                        // 如果单元格内容是数值类型，涉及到金钱（金额、本、利），则设置cell的类型为数值型，设置data的类型为数值类型
+                        if (isNum && !isPercent) {
+                            HSSFDataFormat df = workbook.createDataFormat(); // 此处设置数据格式
+                            if (isInteger) {
+                                contextStyle.setDataFormat(df.getBuiltinFormat("#,#0"));//数据格式只显示整数
+                                // 设置单元格格式
+                                contentCell.setCellStyle(contextStyle);
+                                // 设置单元格内容为double类型
+                                if (val.toString().length() < 9) {
+                                    contentCell.setCellValue(Integer.parseInt(val.toString()));
+                                } else {
+                                    contentCell.setCellStyle(contextStyle);
+                                    // 设置单元格内容为字符型
+                                    contentCell.setCellValue(val.toString());
+                                }
+                            } else {
+                                contextStyle.setDataFormat(df.getBuiltinFormat("#,##0.00"));//保留两位小数点
+                                // 设置单元格格式
+                                contentCell.setCellStyle(contextStyle);
+                                // 设置单元格内容为double类型
+                                contentCell.setCellValue(Double.parseDouble(val.toString()));
+                            }
+                        } else {
+                            contentCell.setCellStyle(contextStyle);
+                            // 设置单元格内容为字符型
+                            contentCell.setCellValue(val.toString());
+                        }
+                        // 设置单元格内容为字符型
+                        // contentCell.setCellValue(val.toString());
+
+                        // 根据内容设置列宽度
+                        int columWidth = val.toString().length() * pixel;
+                        int w = sheet.getColumnWidth(j);
+                        if (columWidth > w && columWidth < (20 * pixel)) {
+                            sheet.setColumnWidth(j, columWidth);
+                        }
+                    }
+                }
+            }
+        }
+        return workbook;
+    }
+
+    /**
      * 导入Excel
-     * 
+     *
      * @param clazz
      * @param xls
      * @return
@@ -319,7 +316,7 @@ public class UseCaseExcelUtil
                             nullCount++;
                             if (!modelProp.nullable()) {
                                 nullError = new Exception(StringFormat.format(notnullerror,
-                                        new String[] { "" + (1 + i), modelProp.name(), modelProp.name() }));
+                                        new String[]{"" + (1 + i), modelProp.name(), modelProp.name()}));
 
                             }
                         } else if (field.getType().equals(Date.class)) {
@@ -370,7 +367,7 @@ public class UseCaseExcelUtil
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        throw new Exception(StringFormat.format(errormsg, new String[] { "" + (1 + i), modelProp.name() })
+                        throw new Exception(StringFormat.format(errormsg, new String[]{"" + (1 + i), modelProp.name()})
                                 + "," + e.getMessage());
                     }
                 }
@@ -388,7 +385,7 @@ public class UseCaseExcelUtil
             xls.close();
         }
     }
-    
+
     public static List importExcelXLSX(Class<?> clazz, InputStream xls) throws Exception {
         try {
             // 取得Excel
@@ -419,7 +416,7 @@ public class UseCaseExcelUtil
                             nullCount++;
                             if (!modelProp.nullable()) {
                                 nullError = new Exception(StringFormat.format(notnullerror,
-                                        new String[] { "" + (1 + i), modelProp.name(), modelProp.name() }));
+                                        new String[]{"" + (1 + i), modelProp.name(), modelProp.name()}));
                             }
                         } else if (field.getType().equals(Date.class)) {
                             if (Cell.CELL_TYPE_STRING == cell.getCellType()) {
@@ -468,7 +465,7 @@ public class UseCaseExcelUtil
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        throw new Exception(StringFormat.format(errormsg, new String[] { "" + (1 + i), modelProp.name() })
+                        throw new Exception(StringFormat.format(errormsg, new String[]{"" + (1 + i), modelProp.name()})
                                 + "," + e.getMessage());
                     }
                 }
@@ -486,21 +483,27 @@ public class UseCaseExcelUtil
             xls.close();
         }
     }
-    
+
     @Retention(RetentionPolicy.RUNTIME)
-     @Target(ElementType.FIELD)
-     public @interface ModelProp{
-         public String name();
-         public int colIndex() default -1;
-         public boolean nullable() default true;
-         public String interfaceXmlName() default "";
-     }
-    private static String parseStringXLS(HSSFCell cell) {
-         return String.valueOf(cell).trim();
+    @Target(ElementType.FIELD)
+    public @interface ModelProp {
+        public String name();
+
+        public int colIndex() default -1;
+
+        public boolean nullable() default true;
+
+        public String interfaceXmlName() default "";
     }
+
+    private static String parseStringXLS(HSSFCell cell) {
+        return String.valueOf(cell).trim();
+    }
+
     private static String parseStringXLSX(XSSFCell cell) {
         return String.valueOf(cell).trim();
-   }
+    }
+
     private static long parseDate(String dateString) throws ParseException {
         if (dateString.indexOf("/") == 4) {
             return new SimpleDateFormat("yyyy/MM/dd").parse(dateString).getTime();
@@ -514,14 +517,14 @@ public class UseCaseExcelUtil
             return new Date().getTime();
         }
     }
-    
-    static class StringFormat {  
-    	  
-        public static String format(String str, String... args) {  
-            for (int i = 0; i < args.length; i++) {  
-                str = str.replaceFirst("\\{" + i + "\\}", args[i]);  
-            }  
-            return str;  
+
+    static class StringFormat {
+
+        public static String format(String str, String... args) {
+            for (int i = 0; i < args.length; i++) {
+                str = str.replaceFirst("\\{" + i + "\\}", args[i]);
+            }
+            return str;
         }
     }
 

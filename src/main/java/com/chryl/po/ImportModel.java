@@ -1,5 +1,5 @@
 package com.chryl.po;
 
- public class ImportModel {
- 
- }
+public class ImportModel {
+
+}

@@ -53,6 +53,7 @@ public class JxLoanPortfolio {
 
     /**
      * null
+     *
      * @return ID null
      */
     public String getId() {
@@ -61,6 +62,7 @@ public class JxLoanPortfolio {
 
     /**
      * null
+     *
      * @param id null
      */
     public void setId(String id) {
@@ -69,6 +71,7 @@ public class JxLoanPortfolio {
 
     /**
      * null
+     *
      * @return ORGID null
      */
     public String getOrgid() {
@@ -77,6 +80,7 @@ public class JxLoanPortfolio {
 
     /**
      * null
+     *
      * @param orgid null
      */
     public void setOrgid(String orgid) {
@@ -85,6 +89,7 @@ public class JxLoanPortfolio {
 
     /**
      * null
+     *
      * @return EMPCODE null
      */
     public String getEmpcode() {
@@ -93,6 +98,7 @@ public class JxLoanPortfolio {
 
     /**
      * null
+     *
      * @param empcode null
      */
     public void setEmpcode(String empcode) {
@@ -101,6 +107,7 @@ public class JxLoanPortfolio {
 
     /**
      * null
+     *
      * @return EMPNAME null
      */
     public String getEmpname() {
@@ -109,6 +116,7 @@ public class JxLoanPortfolio {
 
     /**
      * null
+     *
      * @param empname null
      */
     public void setEmpname(String empname) {
@@ -117,6 +125,7 @@ public class JxLoanPortfolio {
 
     /**
      * null
+     *
      * @return EXC_DATE null
      */
     public String getExcDate() {
@@ -125,6 +134,7 @@ public class JxLoanPortfolio {
 
     /**
      * null
+     *
      * @param excDate null
      */
     public void setExcDate(String excDate) {
@@ -133,6 +143,7 @@ public class JxLoanPortfolio {
 
     /**
      * null
+     *
      * @return MONTHVAL null
      */
     public String getMonthval() {
@@ -141,6 +152,7 @@ public class JxLoanPortfolio {
 
     /**
      * null
+     *
      * @param monthval null
      */
     public void setMonthval(String monthval) {
@@ -149,6 +161,7 @@ public class JxLoanPortfolio {
 
     /**
      * null
+     *
      * @return AVEVAL null
      */
     public String getAveval() {
@@ -157,6 +170,7 @@ public class JxLoanPortfolio {
 
     /**
      * null
+     *
      * @param aveval null
      */
     public void setAveval(String aveval) {
@@ -165,6 +179,7 @@ public class JxLoanPortfolio {
 
     /**
      * null
+     *
      * @return RATIO null
      */
     public String getRatio() {
@@ -173,6 +188,7 @@ public class JxLoanPortfolio {
 
     /**
      * null
+     *
      * @param ratio null
      */
     public void setRatio(String ratio) {
@@ -181,6 +197,7 @@ public class JxLoanPortfolio {
 
     /**
      * null
+     *
      * @return NUM null
      */
     public String getNum() {
@@ -189,6 +206,7 @@ public class JxLoanPortfolio {
 
     /**
      * null
+     *
      * @param num null
      */
     public void setNum(String num) {
@@ -197,6 +215,7 @@ public class JxLoanPortfolio {
 
     /**
      * null
+     *
      * @return SCORE null
      */
     public String getScore() {
@@ -205,6 +224,7 @@ public class JxLoanPortfolio {
 
     /**
      * null
+     *
      * @param score null
      */
     public void setScore(String score) {
