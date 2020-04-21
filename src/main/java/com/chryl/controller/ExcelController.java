@@ -1,16 +1,18 @@
 package com.chryl.controller;
 
-import com.chryl.po.JxLoanPortfolio;
+import com.chryl.po.LoanInfo;
+import com.chryl.util.ExcelUtil;
 import com.chryl.util.UseCaseExcelUtil;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,25 +20,24 @@ import java.util.Map;
  * Created by Chryl on 2019/10/22.
  */
 @Controller
-@RequestMapping("/ex")
+@RequestMapping("/excel")
 public class ExcelController {
 
 
-    //导入 导出
-    @GetMapping("/cel")
+    //导出
+    @GetMapping("/export")
     public void show(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         String fileName = "chrylcs";
-        String columnNames[] = {"机构号", "营销代号", "营销名字"};// 列名
-        String keys[] = {"orgid", "empcode", "empname"};// map中的key
+        String columnNames[] = {"id", "营销代号", "营销名字", "日期1", "日期2"};// 列名
+        String keys[] = {"id", "empcode", "empname", "strDate", "date"};// map中的key
         //数据信息list
-        List<JxLoanPortfolio> list = new ArrayList<>();
-        JxLoanPortfolio j1 = new JxLoanPortfolio();
-        JxLoanPortfolio j2 = new JxLoanPortfolio();
-        j1.setOrgid("123id");
+        List<LoanInfo> list = new ArrayList<>();
+        LoanInfo j1 = new LoanInfo();
+        LoanInfo j2 = new LoanInfo();
+        j1.setId("123id");
         j1.setEmpcode("123code");
         j1.setEmpname("123name");
-        j2.setOrgid("124id");
         j2.setEmpcode("124code");
         j2.setEmpname("124name");
         list.add(j1);
@@ -75,6 +76,49 @@ public class ExcelController {
                 bos.close();
         }
         //return null;
+    }
+
+    //模板文件导入
+    @RequestMapping(value = "/import_excel", method = RequestMethod.POST)
+    public Object import_excel(@RequestParam("uploadFile") MultipartFile uploadFile, String date) {
+        String fileName = uploadFile.getOriginalFilename();
+        String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
+        try {
+            System.out.println(fileName + "." + fileType);
+            InputStream is = uploadFile.getInputStream();
+            if (fileType.equals("xlsx") || fileType.equals("xls")) {
+
+//                String keys[] = {"orgname", "frorgname", "brhid", "businame", "businum", "acctno", "tradeCount", "tradeBal", "tradeCharge", "balamt"};//map中的key
+                String keys[] = {"orgid", "empcode", "empname"};
+                //属性对应的列
+                Map<String, Integer> columnIndexMap = new HashMap<String, Integer>();
+                for (int i = 0; i < keys.length; i++) {
+                    columnIndexMap.put(keys[i], i);
+                }
+                List<LoanInfo> list = ExcelUtil.excle2Object(LoanInfo.class, is, fileType, columnIndexMap);
+                if (list.size() > 0) {
+                    for (LoanInfo jxBusitraCount : list) {
+                        try {
+//                            jxBusitraCountService.insert(jxBusitraCount, true);
+                        } catch (Exception e) {
+//                            return ResponseResult.build(500, jxBusitraCount.getBusiname()+"交易信息已导入，请检查后重新导入！");
+                        }
+                    }
+//                    result = ResponseResult.ok();
+                } else {
+//                    return ResponseResult.build(ResponseResult.ERROR, "文件内容为空！");
+                }
+            } else {
+                //文件类型错误，不是xlsx或者xls格式
+//                result = ResponseResult.build(ResponseResult.ERROR, "所选文件不是.xlsx或者.xls格式文件！");
+            }
+            is.close();
+        } catch (Exception e) {
+//            logger.error("上传异常",e);
+//            result = ResponseResult.build(ResponseResult.ERROR, ExceptionUtil.getStackTrace(e));
+        }
+//        return result;
+        return "";
     }
 
 }
