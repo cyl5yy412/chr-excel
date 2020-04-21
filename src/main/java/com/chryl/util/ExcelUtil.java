@@ -70,8 +70,9 @@ public class ExcelUtil {
                             case "class java.lang.String":
                                 switch (cell.getCellType()) {
                                     case Cell.CELL_TYPE_NUMERIC: // 数字
+                                        //日期字符串转换
                                         short dataFormat = cell.getCellStyle().getDataFormat();
-                                        if (14 == dataFormat || 31 == dataFormat) {//日期字符串转换: yyyy-MM-dd 14 或 yyyy-MM-dd HH:mm:ss 31
+                                        if (14 == dataFormat || 31 == dataFormat) {// yyyy-MM-dd 14 或 yyyy-MM-dd HH:mm:ss 31
                                             double dateVal = cell.getNumericCellValue();//dateDouble
                                             Date javaDate = DateUtil.getJavaDate(dateVal);//javaDate
                                             String yyyyMMdd = sdf.format(javaDate);
@@ -141,7 +142,7 @@ public class ExcelUtil {
      *
      * @param fileType
      * @param is
-     * @param map
+     * @param keys
      * @return
      * @throws Exception
      */
