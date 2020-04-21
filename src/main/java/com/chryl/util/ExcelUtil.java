@@ -70,6 +70,19 @@ public class ExcelUtil {
                             case "class java.lang.String":
                                 switch (cell.getCellType()) {
                                     case Cell.CELL_TYPE_NUMERIC: // 数字
+//                                        所有日期格式都可以通过getDataFormat()值来判断
+//
+//                                        yyyy-MM-dd----- 14
+//
+//                                        yyyy年m月d日--- 31
+//
+//                                        yyyy年m月------- 57
+//
+//                                        m月d日  ---------- 58
+//
+//                                        HH:mm----------- 20
+//
+//                                        h时mm分  ------- 32
                                         //日期字符串转换
                                         short dataFormat = cell.getCellStyle().getDataFormat();
                                         if (14 == dataFormat || 31 == dataFormat) {// yyyy-MM-dd 14 或 yyyy-MM-dd HH:mm:ss 31
