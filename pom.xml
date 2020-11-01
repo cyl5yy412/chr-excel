@@ -19,6 +19,15 @@
     </properties>
 
     <dependencies>
+        <!--  -->
+        <dependency>
+            <groupId>org.jeecgframework</groupId>
+            <artifactId>autopoi-web</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+        <!--  -->
+
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
