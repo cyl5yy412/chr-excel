@@ -19,6 +19,7 @@
     </properties>
 
     <dependencies>
+
         <!--  -->
         <dependency>
             <groupId>org.jeecgframework</groupId>
@@ -27,6 +28,13 @@
         </dependency>
         <!--  -->
 
+
+        <!-- hutool -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>4.5.0</version>
+        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
