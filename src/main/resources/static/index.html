@@ -20,7 +20,20 @@
         <td class="form-table-td-right">
             <input type="file" name="uploadFile"/>
         </td>
-        <button  id="btn-submit">上传</button>
+        <button id="btn-submit">上传</button>
+    </form>
+
+
+    <br>
+    <br>
+    <td class="form-table-td-left">
+        <label for="file">easyExcel文件选择:</label>
+    </td>
+    <form id="contentAddFormeasyExcel" method="post" enctype="multipart/form-data">
+        <td class="form-table-td-right">
+            <input type="file" name="uploadFileeasyExcel"/>
+        </td>
+        <button id="btn-submiteasyExcel">上传</button>
     </form>
 </div>
 <script>
@@ -45,9 +58,20 @@
 //            }
             },
         });
-    }
+    };
+    //easyExcel
+    function submitFormeasyExcel() {
+        $('#contentAddFormeasyExcel').ajaxSubmit({
+            type: 'post',
+            url: 'easy/importData',
+            success: function (resp) {
+                console.log(resp)
+            },
+        });
+    };
     $(function () {
         $("#btn-submit").bind('click', submitForm);
+        $("#btn-submiteasyExcel").bind('click', submitFormeasyExcel);
     })
 
 </script>

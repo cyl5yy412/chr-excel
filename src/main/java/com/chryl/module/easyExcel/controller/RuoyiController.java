@@ -1,10 +1,13 @@
 package com.chryl.module.easyExcel.controller;
 
+import com.chryl.module.easyExcel.service.AliLoanInfoService;
 import com.chryl.po.AliLoanInfo;
 import com.chryl.module.easyExcel.model.AjaxResult;
 import com.chryl.module.easyExcel.poi.ExcelUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -40,5 +43,17 @@ public class RuoyiController {
 
     }
 
+    @Autowired
+    private AliLoanInfoService aliLoanInfoService;
+
+    @PostMapping("/importData")
+    @ResponseBody
+    public AjaxResult importData(@RequestParam("uploadFileeasyExcel") MultipartFile uploadFileeasyExcel, boolean updateSupport) throws Exception {
+        ExcelUtil<AliLoanInfo> util = new ExcelUtil<>(AliLoanInfo.class);
+        List<AliLoanInfo> aliLoanInfos = util.importEasyExcel(uploadFileeasyExcel.getInputStream());
+        String message = aliLoanInfoService.add(aliLoanInfos);
+
+        return AjaxResult.success(message);
+    }
 
 }

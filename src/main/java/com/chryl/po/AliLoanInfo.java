@@ -5,6 +5,7 @@ import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.alibaba.excel.annotation.write.style.HeadFontStyle;
 import com.alibaba.excel.annotation.write.style.HeadRowHeight;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,11 +20,12 @@ import java.util.Date;
 @ColumnWidth(16)
 @HeadRowHeight(14)
 @HeadFontStyle(fontHeightInPoints = 11)
+@TableName(value = "loan_Info")
 public class AliLoanInfo implements Serializable {
 
     private static final long serialVersionUID = 374037782462545488L;
 
-    @ExcelProperty(value = "主键")
+    @ExcelProperty(value = "主键")//这里的value就是excel中的表头的名字
     private String empId;
 
     @ExcelProperty(value = "编号")
