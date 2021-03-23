@@ -47,7 +47,7 @@ public class ElController {
 
 
     /**
-     * !!!!!!!!!!!!!!! okokokok
+     * eladmin 导出excel : list<Obj> 直接导出
      *
      * @param response
      * @throws IOException
